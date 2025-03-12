@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
 import Image from "../components/Image";
+import MainCategories from "../components/MainCategories";
+import FeaturedPosts from "../components/FeaturedPosts";
+import PostList from "../components/PostList";
 
 const Homepage = () => {
   return (
@@ -16,11 +19,10 @@ const Homepage = () => {
         {/* titles  */}
         <div className="">
           <h1 className="text-gray-800 text-2xl md:text-5xl lg:text-6xl font-bold">
-            Swit reviews
+            Bites of NYC
           </h1>
           <p className="mt-8 text-md md:text-xl">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam,
-            temporibus.
+            Explore New York City's Culinary Culture
           </p>
         </div>
         {/* animated button  */}
@@ -57,8 +59,15 @@ const Homepage = () => {
           </button>
         </Link>
       </div>
+      {/* <MainCategories /> */}
+      <MainCategories />
       {/* <Featured /> */}
+      <FeaturedPosts />
       {/* <PostList /> */}
+      <div>
+        <h1 className="my-8 text-2xl text-gray-600">Recently Posted</h1>
+        <PostList/>
+      </div>
     </div>
   );
 };

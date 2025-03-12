@@ -23,28 +23,33 @@ export default function NavBar() {
           h={32}
           className={"rounded-full"}
         />
-        <span>Swit</span>
+        <span>Bites of NYC</span>
       </Link>
       {/*Mobile Menu*/}
-      <div className="visible md:hidden">
+      <div className="visible md:hidden ">
         <div className="cursor-pointer text-2xl" onClick={() => setOpen(!open)}>
           {open ? <IoCloseCircle /> : <GiHamburgerMenu />}
         </div>
         {/* Mobile link list */}
         <div
-          className={`w-full h-screen flex flex-col items-center justify-center absolute top-16 gap-8 font-medium text-lg transition-all ease-in-out ${
+          className={`w-full h-screen flex flex-col items-center justify-center absolute top-16 gap-8 font-medium text-lg transition-all ease-in-out bg-purple-200 ${
             open ? "-right-0" : "-right-[100%]"
           }`}
         >
           <Link to="/">Home</Link>
           <Link to="/">Trending</Link>
           <Link to="/">Most Popular</Link>
-          <Link to="/">About</Link>
-          <Link to="/">
-            <button className="py-2 px-4 rounded-3xl bg-purple-400 text-white">
-              Log In ✐
-            </button>
-          </Link>
+          <Link to="/">About · Contact</Link>
+          <SignedOut>
+            <Link to="/login">
+              <button className="py-2 px-4 rounded-3xl bg-purple-400 text-white">
+                Log In ✐
+              </button>
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
       {/*Desktop Menu*/}
@@ -52,7 +57,7 @@ export default function NavBar() {
         <Link to="/">Home</Link>
         <Link to="/">Trending</Link>
         <Link to="/">Most Popular</Link>
-        <Link to="/">About</Link>
+        <Link to="/about">About · Contact</Link>
         <SignedOut>
           <Link to="/login">
             <button className="py-2 px-4 rounded-3xl bg-purple-400 text-white">
