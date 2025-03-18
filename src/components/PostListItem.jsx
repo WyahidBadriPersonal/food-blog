@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "./Image";
 import { Link } from "react-router";
+import { FaStar, FaStarHalf } from "react-icons/fa";
 
 const PostListItem = () => {
   return (
@@ -8,7 +9,7 @@ const PostListItem = () => {
       {/* image */}
       <div className="md:hidden xl:block xl:w-1/3">
         <Image
-          src="stock"
+          src="stock.jpeg"
           className="rounded-2xl object-cover"
           alt="stock"
           w="400"
@@ -20,8 +21,14 @@ const PostListItem = () => {
           Demo post New York, NY
         </Link>
         <div className="flex items-center gap-2 text-gray-400 text-sm">
-          <span>Written By</span>
-          <Link className="text-blue-700">Nameless author</Link>
+          <span>Rated</span>
+          <span className="text-yellow-400 flex">
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStarHalf />
+          </span>
           <span>·</span>
           <Link className="text-blue-700">Dinner</Link>
           <span>3 hours ago</span>
@@ -32,7 +39,9 @@ const PostListItem = () => {
           vitae voluptate, cumque, pariatur soluta, aspernatur dolorum esse
           inventore atque quisquam porro.
         </p>
-        <Link to="/test" className="underline text-blue-700">Read More</Link>
+        <Link to="/test" className="underline text-blue-700">
+          Read More
+        </Link>
       </div>
     </div>
   );

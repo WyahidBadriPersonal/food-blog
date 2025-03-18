@@ -5,6 +5,7 @@ import { FaTiktok, FaInstagram } from "react-icons/fa";
 import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
+import { FaStar, FaStarHalf } from "react-icons/fa";
 
 const SinglePostPage = () => {
   return (
@@ -17,8 +18,15 @@ const SinglePostPage = () => {
             in doloremque id eius laudantium.
           </h1>
           <div className="flex items-center gap-2 text-gray-400 text-sm">
+            <span>Rated</span>
+            <span className="text-yellow-400 flex">
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStarHalf />
+            </span>
             <span>Written By</span>
-            <Link className="text-blue-700">Nameless author</Link>
             <span>·</span>
             <Link className="text-blue-700">Dinner</Link>
             <span>3 hours ago</span>
