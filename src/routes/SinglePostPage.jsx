@@ -39,7 +39,7 @@ const SinglePostPage = () => {
           </p>
         </div>
         <div className="hidden lg:block w-2/5">
-          <Image src="stock" alt="stock" w="600" className="rounded-2xl" />
+          <Image src="stock.jpeg" alt="stock" w="600" className="rounded-2xl" />
         </div>
       </div>
       {/* content */}

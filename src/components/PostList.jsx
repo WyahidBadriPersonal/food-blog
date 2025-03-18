@@ -1,38 +1,56 @@
 import React from "react";
 import PostListItem from "./PostListItem";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-const fetchPost = async () => {
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`);
+const fetchPost = async (pageParam) => {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+    params: { page: pageParam, limit: 2 },
+  });
   return response.data;
 };
 
 const PostList = () => {
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["posts"],
+    queryFn: ({ pageParam = 1 }) => fetchPost(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.hasMore ? pages.length + 1 : undefined,
+  });
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ['repoData'],
-    queryFn: () => fetchPost(),
-  })
+  // console.log(data)
+  if (isFetching) return "Loading...";
 
-  if (isPending) return 'Loading...'
+  if (error) return "An error has occurred: " + error.message;
 
-  if (error) return 'An error has occurred: ' + error.message
-
-  console.log("data", data);
+  const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
   return (
-    <div className="flex flex-col gap-12 mb-8">
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-      <PostListItem />
-    </div>
+    <InfiniteScroll
+      dataLength={allPosts.length}
+      next={fetchNextPage}
+      hasMore={!!hasNextPage}
+      loader={<h4>Loading more reviews...</h4>}
+      endMessage={
+        <p>
+          <b>End</b>
+        </p>
+      }
+    >
+      {allPosts.map((post) => (
+        <PostListItem key={post.id} post={post} />
+      ))}
+    </InfiniteScroll>
   );
 };
 

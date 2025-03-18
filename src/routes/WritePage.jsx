@@ -3,37 +3,28 @@ import "react-quill-new/dist/quill.snow.css";
 import ReactQuill from "react-quill-new";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {IKContext} from "imagekitio-react"
+import Upload from "../components/Upload";
 
-const authenticator = async () => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/auth/upload-auth`
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
-      );
-    }
-
-    const data = await response.json();
-    const { signature, expire, token } = data;
-    return { signature, expire, token };
-  } catch (error) {
-    throw new Error(`Authentication request failed: ${error.message}`);
-  }
-};
 
 const WritePage = () => {
   const { isLoaded, isSignedIn } = useUser();
   const { getToken } = useAuth();
   const [value, setValue] = useState("");
   const navigate = useNavigate();
+  const [progress, setProgress] = useState(0);
+  const [cover, setCover] = useState("");
+  const [img, setImg] = useState("");
+  const [video, setVideo] = useState("");
+
+  useEffect(() => {
+    img && setValue(prev => prev + `<p><image src="${img.url}"></p>`)
+  },[img]);
+  useEffect(() => {
+    video && setValue(prev => prev + `<p><iframe class="ql-video" src="${video.url}"></p>`)
+  },[video]);
 
   const mutation = useMutation({
     mutationFn: async (newPost) => {
@@ -62,12 +53,13 @@ const WritePage = () => {
     const formData = new FormData(e.target);
 
     const newPost = {
+      img: cover.filePath || "",
       title: formData.get("title"),
       category: formData.get("category"),
       rate: formData.get("rate"),
+      short_desc: formData.get("short_desc"),
       content: value,
     };
-    console.log(newPost);
 
     mutation.mutate(newPost);
   };
@@ -76,16 +68,12 @@ const WritePage = () => {
     <div className="h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6">
       <h1 className="text-xl font-light">Create A New Post</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 flex-1 mb-6">
-        {/* <button className="p-2 shadow-md rounded-xl text-sm text-white bg-purple-600 w-max">
-          Add Cover Picture
-        </button> */}
-        <IKContext
-          publicKey={import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY}
-          urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
-          authenticator={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
-        >
-          {/* ...child components */}
-        </IKContext>
+        <Upload type="image" setProgress={setProgress} setData={setCover}>
+          <button className="p-2 shadow-md rounded-xl text-sm text-white bg-purple-600 w-max">
+            Add Cover Picture
+          </button>
+        </Upload>
+        <img src={cover.url} alt="Cover Preview" className="w-20 h-20"/>
         <input
           type="text"
           placeholder="Title"
@@ -124,25 +112,31 @@ const WritePage = () => {
           placeholder="A Short Description"
           className="p-4 rounded-xl bg-white shadow-xl"
         />
-        <div className="flex">
+        <div className="flex flex-1 ">
           <div className="flex flex-col gap-2 mr-2">
-            <div className="cursor-pointer">🖼️</div>
-            <div className="cursor-pointer">🎥</div>
+            <Upload type="image" setProgress={setProgress} setData={setImg}>
+              📸
+            </Upload>
+            <Upload type="video" setProgress={setProgress} setData={setVideo}>
+              🎥
+            </Upload>
           </div>
           <ReactQuill
             theme="snow"
             className="flex-1 rounded-xl bg-white shadow-xl"
             value={value}
             onChange={setValue}
+            readOnly={(progress > 0 && progress < 100)}
           />
         </div>
         <button
-          disabled={mutation.isPending}
+          disabled={mutation.isPending || (progress > 0 && progress < 100)}
           className="bg-purple-600 text-white font-medium rounded-xl mt-4 p-2 w-36 disabled:opacity-50"
         >
           {mutation.isPending ? "Posting..." : "Post"}
         </button>
-        {mutation.isError && <div>{mutation.error.message}</div>}
+        {"Upload Progress: " + progress + "%"}
+        {/* {mutation.isError && <div>{mutation.error.message}</div>} */}
       </form>
     </div>
   );

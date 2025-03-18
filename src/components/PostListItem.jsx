@@ -2,23 +2,24 @@ import React from "react";
 import Image from "./Image";
 import { Link } from "react-router";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import {format} from "timeago.js"
 
-const PostListItem = () => {
+const PostListItem = ({ post }) => {
   return (
-    <div className="flex flex-col xl:flex-row gap-8">
+    <div className="flex flex-col xl:flex-row gap-8 mb-12">
       {/* image */}
       <div className="md:hidden xl:block xl:w-1/3">
-        <Image
-          src="stock.jpeg"
+      {post.img ? <Image
+          src={post.img}
           className="rounded-2xl object-cover"
           alt="stock"
           w="400"
-        />
+        /> : "No Image"}
       </div>
       {/* details */}
       <div className="flex flex-col gap-4 xl:w-2/3">
         <Link to="/test" className="text-4xl font-semibold">
-          Demo post New York, NY
+          {post.title}
         </Link>
         <div className="flex items-center gap-2 text-gray-400 text-sm">
           <span>Rated</span>
@@ -31,15 +32,12 @@ const PostListItem = () => {
           </span>
           <span>·</span>
           <Link className="text-blue-700">Dinner</Link>
-          <span>3 hours ago</span>
+          <span>{format(post.createdAt)}</span>
         </div>
         <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores
-          numquam consequuntur fugit natus harum at impedit praesentium alias
-          vitae voluptate, cumque, pariatur soluta, aspernatur dolorum esse
-          inventore atque quisquam porro.
+          {post.short_desc || "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quae!"}
         </p>
-        <Link to="/test" className="underline text-blue-700">
+        <Link to={`/${post.slug}`} className="underline text-blue-700">
           Read More
         </Link>
       </div>
