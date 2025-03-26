@@ -1,11 +1,14 @@
 import PostList from "../components/PostList";
 import PostListSideMenu from "../components/PostListSideMenu";
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 const PostListPage = () => {
+  const [searchParams] = useSearchParams(); 
+  const cat = searchParams.get("cat");
   const [open, setOpen] = useState(false);
   return (
     <div className="">
-      <h1 className="text-2xl mb-8">Dinner</h1>
+      <h1 className="text-3xl mb-8 font-semibold">{cat ? cat.toUpperCase() : "All Posts"}</h1>
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden bg-purple-600 text-sm text-white py-2 px-4 rounded-xl mb-4"

@@ -4,8 +4,18 @@ import Image from "../components/Image";
 import MainCategories from "../components/MainCategories";
 import FeaturedPosts from "../components/FeaturedPosts";
 import PostList from "../components/PostList";
+import { useUser } from "@clerk/clerk-react";
+import Loading from "../components/Loading";
 
 const Homepage = () => {
+  const { isLoaded, user } = useUser();
+
+  if (!isLoaded) {
+    return <Loading />;
+  }
+
+  const isAdmin = user?.publicMetadata?.role === "admin";
+
   return (
     <div className="mt-4 flex flex-col gap-4">
       {/* <Breadcrumb /> */}
@@ -26,13 +36,15 @@ const Homepage = () => {
           </p>
         </div>
         {/* animated button  */}
-        <Link to="write" className="relative hidden md:block">
+        <Link
+          to="write"
+          className={`relative hidden md:block ${isAdmin ? "z-10" : "-z-10"}`}
+        >
           <svg
             viewBox="0 0 200 200"
             width="200"
             height="200"
-            className="text-lg tracking-widest"
-            // className="text-lg tracking-widest animate-spin animatedButton"
+            className="text-lg tracking-widest animate-spin animatedButton"
           >
             <path
               id="circlePath"
@@ -66,7 +78,7 @@ const Homepage = () => {
       {/* <PostList /> */}
       <div>
         <h1 className="my-8 text-2xl text-gray-600">Recently Posted</h1>
-        <PostList/>
+        <PostList />
       </div>
     </div>
   );

@@ -1,107 +1,76 @@
 import React from "react";
 import Image from "../components/Image";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import { FaTiktok, FaInstagram } from "react-icons/fa";
 import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { format } from "timeago.js";
+import DOMPurify from "dompurify";
+
+const fetchPost = async (slug) => {
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
+  return res.data;
+};
 
 const SinglePostPage = () => {
+  const {slug} = useParams();
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["post", slug],
+    queryFn: () => fetchPost(slug),
+  });
+
+  if (isPending) return "Loading...";
+  if (error) return "An error has occurred: " + error.message;
+  if (!data) return "Post not found";
   return (
     <div className="flex flex-col gap-8">
       {/* detail */}
       <div className="flex gap-8">
-        <div className="lg:w-3/5 flex flex-col gap-8">
+        <div className="lg:w-4/5 flex flex-col gap-8">
           <h1 className="text-xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis quae
-            in doloremque id eius laudantium.
+            {data.title}
           </h1>
           <div className="flex items-center gap-2 text-gray-400 text-sm">
             <span>Rated</span>
             <span className="text-yellow-400 flex">
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStarHalf />
+             {
+              Array(Math.floor(data.rate))
+              .fill(0)
+              .map((_, i) => (
+                <FaStar key={i} />
+              ))}
+             {
+              Array(Math.ceil(data.rate - Math.floor(data.rate)))
+              .fill(0)
+              .map((_, i) => (
+                <FaStarHalf key={i} />
+              ))
+             }
+             
             </span>
-            <span>Written By</span>
+            <span>Written</span>
             <span>·</span>
-            <Link className="text-blue-700">Dinner</Link>
-            <span>3 hours ago</span>
+            <span className="text-blue-500">{format(data.createdAt)}</span>
           </div>
           <p className="font-medium text-gray-500">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Asperiores
-            numquam consequuntur fugit natus harum at impedit praesentium alias
-            vitae voluptate, cumque, pariatur soluta, aspernatur dolorum esse
-            inventore atque quisquam porro.
+            {data.short_desc || "No description submitted!"}
           </p>
         </div>
-        <div className="hidden lg:block w-2/5">
-          <Image src="stock.jpeg" alt="stock" w="600" className="rounded-2xl" />
-        </div>
+        {data.img ? <div className="hidden lg:block w-1/5">
+          <Image src={data.img} alt="stock" w="600" className="rounded-2xl" />
+        </div> : "No image uploaded"}
       </div>
       {/* content */}
       <div className="flex flex-col gap-12 md:flex-row">
         {/* text */}
         <div className="lg:text-lg flex flex-col gap-6 text-justify">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis atque
-            deleniti laudantium saepe ipsa, laboriosam quam dolores voluptatem!
-            Quaerat nostrum numquam autem beatae possimus. Cumque magni vitae
-            quam nobis, voluptas libero perspiciatis accusamus illum sunt
-            nostrum quos iste aut saepe eos nesciunt recusandae neque laborum et
-            aliquam? Facilis nulla vitae molestiae. Qui architecto quibusdam
-            rerum hic dolore natus quos adipisci perferendis quod. Nobis in,
-            molestias ex eos nihil laudantium nesciunt libero voluptatem
-            similique cumque totam commodi tempora vitae corrupti labore ut
-            autem nostrum architecto suscipit. Rerum perspiciatis sequi alias,
-            inventore, nostrum voluptatem earum perferendis eum laboriosam
-            veniam, cupiditate quaerat voluptatibus.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis atque
-            deleniti laudantium saepe ipsa, laboriosam quam dolores voluptatem!
-            Quaerat nostrum numquam autem beatae possimus. Cumque magni vitae
-            quam nobis, voluptas libero perspiciatis accusamus illum sunt
-            nostrum quos iste aut saepe eos nesciunt recusandae neque laborum et
-            aliquam? Facilis nulla vitae molestiae. Qui architecto quibusdam
-            rerum hic dolore natus quos adipisci perferendis quod. Nobis in,
-            molestias ex eos nihil laudantium nesciunt libero voluptatem
-            similique cumque totam commodi tempora vitae corrupti labore ut
-            autem nostrum architecto suscipit. Rerum perspiciatis sequi alias,
-            inventore, nostrum voluptatem earum perferendis eum laboriosam
-            veniam, cupiditate quaerat voluptatibus.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis atque
-            deleniti laudantium saepe ipsa, laboriosam quam dolores voluptatem!
-            Quaerat nostrum numquam autem beatae possimus. Cumque magni vitae
-            quam nobis, voluptas libero perspiciatis accusamus illum sunt
-            nostrum quos iste aut saepe eos nesciunt recusandae neque laborum et
-            aliquam? Facilis nulla vitae molestiae. Qui architecto quibusdam
-            rerum hic dolore natus quos adipisci perferendis quod. Nobis in,
-            molestias ex eos nihil laudantium nesciunt libero voluptatem
-            similique cumque totam commodi tempora vitae corrupti labore ut
-            autem nostrum architecto suscipit. Rerum perspiciatis sequi alias,
-            inventore, nostrum voluptatem earum perferendis eum laboriosam
-            veniam, cupiditate quaerat voluptatibus.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis atque
-            deleniti laudantium saepe ipsa, laboriosam quam dolores voluptatem!
-            Quaerat nostrum numquam autem beatae possimus. Cumque magni vitae
-            quam nobis, voluptas libero perspiciatis accusamus illum sunt
-            nostrum quos iste aut saepe eos nesciunt recusandae neque laborum et
-            aliquam? Facilis nulla vitae molestiae. Qui architecto quibusdam
-            rerum hic dolore natus quos adipisci perferendis quod. Nobis in,
-            molestias ex eos nihil laudantium nesciunt libero voluptatem
-            similique cumque totam commodi tempora vitae corrupti labore ut
-            autem nostrum architecto suscipit. Rerum perspiciatis sequi alias,
-            inventore, nostrum voluptatem earum perferendis eum laboriosam
-            veniam, cupiditate quaerat voluptatibus.
-          </p>
+          {/* <p>{data.content}</p> */}
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }} />
         </div>
         {/* menu */}
         <div className="px-4 h-max sticky top-8">
@@ -115,9 +84,11 @@ const SinglePostPage = () => {
                 w="48"
                 h="48"
               />
-              <Link className="text-blue-500">Arthur Read</Link>
+              <Link className="text-blue-500">Bites Of NYC</Link>
             </div>
-            <p className="text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur</p>
+            <p className="text-sm text-gray-500">
+              New York Based Food Blog
+            </p>
             <div className="flex gap-2">
               <Link>
                 <FaTiktok />
@@ -127,22 +98,34 @@ const SinglePostPage = () => {
               </Link>
             </div>
           </div>
-          <PostMenuActions />
+          <PostMenuActions post={data}/>
           <h1 className="mt-8 mb-4 text-small font-medium">Categories</h1>
           <div className="flex flex-col gap-2 text-sm ">
             <Link className="underline hover:text-blue-500" to="/posts">
               All
             </Link>
-            <Link className="underline hover:text-blue-500" to="/posts?cat=breakfast">
+            <Link
+              className="underline hover:text-blue-500"
+              to="/posts?cat=breakfast"
+            >
               Breakfast
             </Link>
-            <Link className="underline hover:text-blue-500" to="/posts?cat=brunch">
+            <Link
+              className="underline hover:text-blue-500"
+              to="/posts?cat=brunch"
+            >
               Brunch
             </Link>
-            <Link className="underline hover:text-blue-500" to="/posts?cat=lunch">
+            <Link
+              className="underline hover:text-blue-500"
+              to="/posts?cat=lunch"
+            >
               Lunch
             </Link>
-            <Link className="underline hover:text-blue-500" to="/posts?cat=dinner">
+            <Link
+              className="underline hover:text-blue-500"
+              to="/posts?cat=dinner"
+            >
               Dinner
             </Link>
           </div>
@@ -150,7 +133,7 @@ const SinglePostPage = () => {
           <Search />
         </div>
       </div>
-      <Comments/>
+      <Comments postId={data._id}/>
     </div>
   );
 };

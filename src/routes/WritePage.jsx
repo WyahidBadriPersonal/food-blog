@@ -7,10 +7,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Upload from "../components/Upload";
+import Loading from "../components/Loading";
+
 
 
 const WritePage = () => {
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
   const { getToken } = useAuth();
   const [value, setValue] = useState("");
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const WritePage = () => {
   });
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   if (isLoaded && !isSignedIn) {
     return <div>Sign in to write</div>;
@@ -63,6 +65,13 @@ const WritePage = () => {
 
     mutation.mutate(newPost);
   };
+
+  const isAdmin = user?.publicMetadata?.role === "admin" || false;
+
+  if (!isAdmin) {
+    <div>Access Denied</div>
+    return navigate("/");
+  }
 
   return (
     <div className="h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6">
