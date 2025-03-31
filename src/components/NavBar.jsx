@@ -39,10 +39,10 @@ export default function NavBar() {
             open ? "-right-0" : "-right-[100%]"
           }`}
         >
-          <Link to="/">Home</Link>
-          <Link to="/">Trending</Link>
-          <Link to="/">Most Popular</Link>
-          <Link to="/">About · Contact</Link>
+          <Link to="/" className="hover:underline hover:text-blue-500">Home</Link>
+          {/* <Link to="/">Most Popular</Link> */}
+          <Link to="/users/my-posts" className="hover:underline hover:text-blue-500">Saved Posts</Link>
+          <Link to="/about" className="hover:underline hover:text-blue-500">About · Contact</Link>
           <SignedOut>
             <Link to="/login">
               <button className="py-2 px-4 rounded-3xl bg-purple-400 text-white">
@@ -57,10 +57,10 @@ export default function NavBar() {
       </div>
       {/*Desktop Menu*/}
       <div className="hidden md:flex items-center gap-8 xl:gap-12 font-medium">
-        <Link to="/">Home</Link>
-        <Link to="/">Trending</Link>
-        <Link to="/">Most Popular</Link>
-        <Link to="/about">About · Contact</Link>
+        <Link to="/" className="hover:underline hover:text-blue-500">Home</Link>
+        {/* <Link to="/">Most Popular</Link> */}
+        <Link to="/users/my-posts" className="hover:underline hover:text-blue-500">Saved Posts</Link>
+        <Link to="/about" className="hover:underline hover:text-blue-500">About · Contact</Link>
         <SignedOut>
           <Link to="/login">
             <button className="py-2 px-4 rounded-3xl bg-purple-400 text-white">

@@ -78,8 +78,8 @@ const SinglePostPage = () => {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-8">
               <Image
-                src="arthur.png"
-                alt="arthur"
+                src="avatar.jpeg"
+                alt="Author"
                 className="rounded-full w-12 h-12 object-cover"
                 w="48"
                 h="48"
@@ -90,12 +90,12 @@ const SinglePostPage = () => {
               New York Based Food Blog
             </p>
             <div className="flex gap-2">
-              <Link>
+              <Link to="https://www.tiktok.com/@bitesofnyc?_t=ZP-8v9120p3aYw&_r=1" target="_blank">
                 <FaTiktok />
               </Link>
-              <Link>
+              {/* <Link to="">
                 <FaInstagram />
-              </Link>
+              </Link> */}
             </div>
           </div>
           <PostMenuActions post={data}/>
@@ -133,7 +133,7 @@ const SinglePostPage = () => {
           <Search />
         </div>
       </div>
-      <Comments postId={data._id}/>
+      {/* <Comments postId={data._id}/> */}
     </div>
   );
 };
